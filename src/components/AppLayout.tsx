@@ -1,0 +1,127 @@
+
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { 
+  LayoutDashboard, 
+  PieChart, 
+  Calendar, 
+  CreditCard, 
+  Settings,
+  Menu,
+  LogOut,
+  Moon,
+  Sun
+} from 'lucide-react';
+
+interface SidebarLinkProps {
+  icon: React.ReactNode;
+  label: string;
+  active?: boolean;
+  onClick?: () => void;
+}
+
+const SidebarLink: React.FC<SidebarLinkProps> = ({ icon, label, active, onClick }) => {
+  return (
+    <Button
+      variant="ghost"
+      className={`w-full justify-start gap-2 ${active ? 'bg-primary/10' : ''}`}
+      onClick={onClick}
+    >
+      {icon}
+      <span>{label}</span>
+    </Button>
+  );
+};
+
+interface AppLayoutProps {
+  children: React.ReactNode;
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+}
+
+const AppLayout: React.FC<AppLayoutProps> = ({ children, darkMode, toggleDarkMode }) => {
+  const isMobile = useIsMobile();
+  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" /> },
+    { id: 'analytics', label: 'Analytics', icon: <PieChart className="h-5 w-5" /> },
+    { id: 'calendar', label: 'Calendar', icon: <Calendar className="h-5 w-5" /> },
+    { id: 'expenses', label: 'Expenses', icon: <CreditCard className="h-5 w-5" /> },
+    { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" /> },
+  ];
+
+  const handleNavClick = (pageId: string) => {
+    setCurrentPage(pageId);
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  };
+
+  const renderSidebarContent = () => (
+    <div className="flex flex-col h-full">
+      <div className="px-4 py-6">
+        <h1 className="text-2xl font-bold">Budget Blitz</h1>
+      </div>
+      
+      <div className="flex-1 px-2 py-2 space-y-1">
+        {navItems.map((item) => (
+          <SidebarLink
+            key={item.id}
+            icon={item.icon}
+            label={item.label}
+            active={currentPage === item.id}
+            onClick={() => handleNavClick(item.id)}
+          />
+        ))}
+      </div>
+      
+      <div className="px-2 py-4 border-t">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start gap-2"
+          onClick={toggleDarkMode}
+        >
+          {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
+        </Button>
+        <Button variant="ghost" className="w-full justify-start gap-2 text-destructive hover:text-destructive">
+          <LogOut className="h-5 w-5" />
+          <span>Log Out</span>
+        </Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="flex h-full">
+      {isMobile ? (
+        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50">
+              <Menu className="h-5 w-5" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="left" className="w-64 p-0">
+            {renderSidebarContent()}
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <div className="w-64 h-full border-r bg-card">
+          {renderSidebarContent()}
+        </div>
+      )}
+
+      <main className="flex-1 overflow-auto">
+        <div className="container py-6">
+          {children}
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default AppLayout;
