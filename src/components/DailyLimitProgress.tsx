@@ -2,6 +2,7 @@
 import React from 'react';
 import { Progress } from './ui/progress';
 import { useExpense } from '@/contexts/ExpenseContext';
+import { cn } from '@/lib/utils';
 
 const DailyLimitProgress: React.FC = () => {
   const { dailyLimit } = useExpense();
@@ -19,8 +20,7 @@ const DailyLimitProgress: React.FC = () => {
       </div>
       <Progress 
         value={percentage} 
-        className={`h-2 ${isOverLimit ? 'bg-red-900/20' : 'bg-blue-900/20'}`}
-        indicatorClassName={isOverLimit ? 'bg-expense' : 'bg-primary'}
+        className={cn('h-2', isOverLimit ? 'bg-red-900/20' : 'bg-blue-900/20')}
       />
       {isOverLimit && (
         <p className="text-xs text-expense animate-fade-in">

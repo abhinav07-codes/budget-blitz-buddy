@@ -27,12 +27,12 @@ const SpendingTrends: React.FC = () => {
         return expenseDate === day.key;
       });
       
-      const total = expensesByDay.reduce((sum, expense) => sum + expense.amount, 0);
+      const total = dayExpenses.reduce((sum, expense) => sum + expense.amount, 0);
       
       return {
         name: day.label,
         date: day.key,
-        amount: expensesByDay.length ? total : 0
+        amount: dayExpenses.length ? total : 0
       };
     });
     

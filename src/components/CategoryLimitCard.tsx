@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { useExpense } from '@/contexts/ExpenseContext';
 import { CategoryLimit } from '@/types';
 import { getCategoryColor } from '@/data/mockData';
+import { cn } from '@/lib/utils';
 
 interface CategoryLimitCardProps {
   categoryLimit: CategoryLimit;
@@ -33,11 +34,9 @@ const CategoryLimitCard: React.FC<CategoryLimitCardProps> = ({ categoryLimit }) 
         <Progress 
           value={percentage} 
           className="h-2"
-          indicatorClassName={isOverLimit ? "bg-expense" : ""}
           style={{
             backgroundColor: `${categoryColor}20`,
-            "--progress-color": categoryColor
-          } as React.CSSProperties}
+          }}
         />
         {isOverLimit && (
           <p className="text-xs text-expense mt-1">
