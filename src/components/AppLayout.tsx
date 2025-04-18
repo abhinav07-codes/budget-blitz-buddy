@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   PieChart, 
@@ -12,25 +13,30 @@ import {
   Menu,
   LogOut,
   Moon,
-  Sun
+  Sun,
+  ArrowDownCircle
 } from 'lucide-react';
 
 interface SidebarLinkProps {
   icon: React.ReactNode;
   label: string;
+  to: string;
   active?: boolean;
   onClick?: () => void;
 }
 
-const SidebarLink: React.FC<SidebarLinkProps> = ({ icon, label, active, onClick }) => {
+const SidebarLink: React.FC<SidebarLinkProps> = ({ icon, label, to, active, onClick }) => {
   return (
     <Button
       variant="ghost"
       className={`w-full justify-start gap-2 ${active ? 'bg-primary/10' : ''}`}
       onClick={onClick}
+      asChild
     >
-      {icon}
-      <span>{label}</span>
+      <Link to={to}>
+        {icon}
+        <span>{label}</span>
+      </Link>
     </Button>
   );
 };
@@ -43,19 +49,20 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children, darkMode, toggleDarkMode }) => {
   const isMobile = useIsMobile();
-  const [currentPage, setCurrentPage] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" /> },
-    { id: 'analytics', label: 'Analytics', icon: <PieChart className="h-5 w-5" /> },
-    { id: 'calendar', label: 'Calendar', icon: <Calendar className="h-5 w-5" /> },
-    { id: 'expenses', label: 'Expenses', icon: <CreditCard className="h-5 w-5" /> },
-    { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" /> },
+    { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-5 w-5" />, to: '/' },
+    { id: 'imports', label: 'Import History', icon: <ArrowDownCircle className="h-5 w-5" />, to: '/import-history' },
+    { id: 'analytics', label: 'Analytics', icon: <PieChart className="h-5 w-5" />, to: '/analytics' },
+    { id: 'calendar', label: 'Calendar', icon: <Calendar className="h-5 w-5" />, to: '/calendar' },
+    { id: 'expenses', label: 'Expenses', icon: <CreditCard className="h-5 w-5" />, to: '/expenses' },
+    { id: 'settings', label: 'Settings', icon: <Settings className="h-5 w-5" />, to: '/settings' },
   ];
 
-  const handleNavClick = (pageId: string) => {
-    setCurrentPage(pageId);
+  const handleNavClick = () => {
     if (isMobile) {
       setSidebarOpen(false);
     }
@@ -73,8 +80,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, darkMode, toggleDarkMod
             key={item.id}
             icon={item.icon}
             label={item.label}
-            active={currentPage === item.id}
-            onClick={() => handleNavClick(item.id)}
+            to={item.to}
+            active={currentPath === item.to}
+            onClick={handleNavClick}
           />
         ))}
       </div>

@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { ExpenseProvider } from "@/contexts/ExpenseContext";
 import AppLayout from "@/components/AppLayout";
 import Dashboard from "@/components/Dashboard";
+import ImportHistory from "./pages/ImportHistory";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => {
               <AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode}>
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
+                  <Route path="/import-history" element={<ImportHistory />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </AppLayout>

@@ -11,6 +11,7 @@ import ExpenseForm from '@/components/ExpenseForm';
 import SpendingTrends from '@/components/SpendingTrends';
 import { useExpense } from '@/contexts/ExpenseContext';
 import { cn } from '@/lib/utils';
+import ImportTransactions from '@/components/ImportTransactions';
 
 const Dashboard: React.FC = () => {
   const { categoryLimits } = useExpense();
@@ -19,7 +20,10 @@ const Dashboard: React.FC = () => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Budget Dashboard</h2>
-        <ExpenseForm />
+        <div className="flex gap-2">
+          <ImportTransactions />
+          <ExpenseForm />
+        </div>
       </div>
       
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
