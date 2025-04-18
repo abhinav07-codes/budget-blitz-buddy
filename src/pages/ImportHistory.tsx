@@ -3,9 +3,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useExpense } from '@/contexts/ExpenseContext';
 import ImportTransactions from '@/components/ImportTransactions';
+import { Skeleton } from "@/components/ui/skeleton";
 
 const ImportHistory: React.FC = () => {
-  const { expenses } = useExpense();
+  const { expenses, isLoading } = useExpense();
   
   // Filter expenses that were automatically imported
   const importedExpenses = expenses.filter(expense => 
@@ -20,7 +21,24 @@ const ImportHistory: React.FC = () => {
         <ImportTransactions />
       </div>
       
-      {importedExpenses.length === 0 ? (
+      {isLoading ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Skeleton className="h-6 w-48" />
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : importedExpenses.length === 0 ? (
         <Card>
           <CardContent className="py-4">
             <p className="text-center text-muted-foreground">

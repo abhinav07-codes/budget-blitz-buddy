@@ -1,9 +1,13 @@
 
-import { ExpenseCategory } from "../types";
-import { supabase } from '@/lib/supabase';
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
 
 // Keywords for each category to help with basic categorization
-const categoryKeywords: Record<ExpenseCategory, string[]> = {
+const categoryKeywords: Record<string, string[]> = {
   food: ["grocery", "restaurant", "cafe", "pizza", "food", "coffee", "bakery", "meal", "diner", "lunch"],
   travel: ["gas", "uber", "lyft", "taxi", "flight", "hotel", "motel", "airbnb", "train", "bus", "car rental"],
   bills: ["utility", "water", "electricity", "gas bill", "phone", "internet", "insurance", "rent", "mortgage"],
@@ -12,14 +16,13 @@ const categoryKeywords: Record<ExpenseCategory, string[]> = {
   other: []
 };
 
-// Local fallback categorization for offline support
-function localCategorizeExpense(title: string, amount: number): ExpenseCategory {
+function categorizeExpense(title: string, amount: number): string {
   title = title.toLowerCase();
   
   // Check if the title matches any keywords for each category
   for (const [category, keywords] of Object.entries(categoryKeywords)) {
     if (keywords.some(keyword => title.includes(keyword))) {
-      return category as ExpenseCategory;
+      return category;
     }
   }
   
@@ -39,25 +42,40 @@ function localCategorizeExpense(title: string, amount: number): ExpenseCategory 
   return "other";
 }
 
-// Main function that tries to use the Edge Function first, then falls back to local categorization
-export async function categorizeExpense(title: string, amount: number): Promise<ExpenseCategory> {
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders })
+  }
+
   try {
-    // Try to use the Edge Function for AI-powered categorization
-    const { data, error } = await supabase.functions.invoke('categorize-expense', {
-      body: { title, amount }
-    });
+    const { title, amount } = await req.json()
     
-    if (error) throw error;
-    
-    if (data && data.category) {
-      return data.category as ExpenseCategory;
+    if (!title || amount === undefined) {
+      throw new Error('Missing required fields: title and amount')
     }
     
-    // Fall back to local categorization if edge function doesn't return expected data
-    return localCategorizeExpense(title, amount);
+    const category = categorizeExpense(title, amount)
+    
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        category 
+      }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      }
+    )
   } catch (error) {
-    console.error('Error using AI categorization:', error);
-    // Fall back to local categorization if the edge function fails
-    return localCategorizeExpense(title, amount);
+    return new Response(
+      JSON.stringify({ 
+        success: false, 
+        error: error.message 
+      }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 400,
+      }
+    )
   }
-}
+})
