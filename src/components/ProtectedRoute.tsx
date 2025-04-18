@@ -14,6 +14,12 @@ const ProtectedRoute = () => {
     );
   }
 
+  // For development mode, allow access even without session
+  if (!session && import.meta.env.DEV) {
+    console.warn('No auth session found, but allowing access in development mode');
+    return <Outlet />;
+  }
+
   if (!session) {
     return <Navigate to="/login" replace />;
   }

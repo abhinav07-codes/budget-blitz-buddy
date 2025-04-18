@@ -14,7 +14,7 @@ interface ExpenseContextType {
   updateCategoryLimit: (category: ExpenseCategory, limit: number) => void;
   getTodayExpenses: () => Expense[];
   getMonthlyExpenses: () => Expense[];
-  fetchAndCategorizePayments: () => Promise<void>;
+  fetchAndCategorizePayments: () => void;
   isFetchingPayments: boolean;
   isLoading: boolean;
 }
