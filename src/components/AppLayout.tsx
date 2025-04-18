@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, Outlet } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   PieChart, 
@@ -42,12 +42,11 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ icon, label, to, active, onCl
 };
 
 interface AppLayoutProps {
-  children: React.ReactNode;
   darkMode: boolean;
   toggleDarkMode: () => void;
 }
 
-const AppLayout: React.FC<AppLayoutProps> = ({ children, darkMode, toggleDarkMode }) => {
+const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
   const isMobile = useIsMobile();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
@@ -125,7 +124,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children, darkMode, toggleDarkMod
 
       <main className="flex-1 overflow-auto">
         <div className="container py-6">
-          {children}
+          <Outlet />
         </div>
       </main>
     </div>
