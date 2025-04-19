@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +12,10 @@ import ImportHistory from "./pages/ImportHistory";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Analytics from "./pages/Analytics";
+import Calendar from "./pages/Calendar";
+import Expenses from "./pages/Expenses";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +49,10 @@ const App = () => {
                   <Route element={<ProtectedRoute />}>
                     <Route element={<AppLayout darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}>
                       <Route path="/" element={<Dashboard />} />
+                      <Route path="/analytics" element={<Analytics />} />
+                      <Route path="/calendar" element={<Calendar />} />
+                      <Route path="/expenses" element={<Expenses />} />
+                      <Route path="/settings" element={<Settings />} />
                       <Route path="/import-history" element={<ImportHistory />} />
                     </Route>
                   </Route>
