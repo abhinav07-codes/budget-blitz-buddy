@@ -69,7 +69,10 @@ export type Database = {
           category: string
           created_at: string | null
           date: string
+          description: string | null
           id: string
+          is_recurring: boolean | null
+          source: string | null
           title: string
           user_id: string | null
         }
@@ -78,7 +81,10 @@ export type Database = {
           category: string
           created_at?: string | null
           date: string
+          description?: string | null
           id?: string
+          is_recurring?: boolean | null
+          source?: string | null
           title: string
           user_id?: string | null
         }
@@ -87,9 +93,102 @@ export type Database = {
           category?: string
           created_at?: string | null
           date?: string
+          description?: string | null
           id?: string
+          is_recurring?: boolean | null
+          source?: string | null
           title?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      savings: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          target_amount: number | null
+          target_date: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          target_amount?: number | null
+          target_date?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          target_amount?: number | null
+          target_date?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      services: {
+        Row: {
+          cost: number
+          created_at: string
+          id: string
+          name: string
+          renewal_date: string
+          user_id: string
+        }
+        Insert: {
+          cost: number
+          created_at?: string
+          id?: string
+          name: string
+          renewal_date: string
+          user_id: string
+        }
+        Update: {
+          cost?: number
+          created_at?: string
+          id?: string
+          name?: string
+          renewal_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      stock_suggestions: {
+        Row: {
+          company_name: string
+          created_at: string
+          id: string
+          potential_gain: number | null
+          risk_level: string
+          stock_symbol: string
+          suggestion: string
+          user_id: string
+        }
+        Insert: {
+          company_name: string
+          created_at?: string
+          id?: string
+          potential_gain?: number | null
+          risk_level: string
+          stock_symbol: string
+          suggestion: string
+          user_id: string
+        }
+        Update: {
+          company_name?: string
+          created_at?: string
+          id?: string
+          potential_gain?: number | null
+          risk_level?: string
+          stock_symbol?: string
+          suggestion?: string
+          user_id?: string
         }
         Relationships: []
       }
