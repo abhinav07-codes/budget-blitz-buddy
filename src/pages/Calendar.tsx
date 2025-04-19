@@ -3,7 +3,8 @@ import React from 'react';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useExpense } from '@/contexts/ExpenseContext';
-import { addDays, format } from 'date-fns';
+import { Badge } from "@/components/ui/badge";
+import { format } from 'date-fns';
 
 const Calendar = () => {
   const { expenses } = useExpense();
@@ -66,9 +67,17 @@ const Calendar = () => {
                   {selectedDateExpenses.map(expense => (
                     <div
                       key={expense.id}
-                      className="flex justify-between items-center p-2 rounded bg-secondary/20"
+                      className="flex justify-between items-start p-3 rounded-lg bg-secondary/20"
                     >
-                      <span>{expense.title}</span>
+                      <div className="space-y-1">
+                        <p className="font-medium">{expense.description || expense.title}</p>
+                        <div className="flex items-center gap-2">
+                          <Badge variant="outline">{expense.category}</Badge>
+                          {expense.source && (
+                            <Badge variant="secondary">{expense.source}</Badge>
+                          )}
+                        </div>
+                      </div>
                       <span className="font-medium">
                         ${expense.amount.toFixed(2)}
                       </span>

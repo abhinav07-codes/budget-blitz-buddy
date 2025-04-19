@@ -4,15 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useExpense } from '@/contexts/ExpenseContext';
 import ImportTransactions from '@/components/ImportTransactions';
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
 
-const ImportHistory: React.FC = () => {
+const ImportHistory = () => {
   const { expenses, isLoading } = useExpense();
   
-  // Filter expenses that were automatically imported
-  const importedExpenses = expenses.filter(expense => 
-    expense.notes?.includes('Auto-categorized') || 
-    expense.notes?.includes('Automatically imported')
-  );
+  // Filter expenses that were imported
+  const importedExpenses = expenses.filter(expense => expense.source && expense.source !== 'manual');
   
   return (
     <div className="space-y-4">
@@ -23,24 +21,16 @@ const ImportHistory: React.FC = () => {
       
       {isLoading ? (
         <Card>
-          <CardHeader>
-            <CardTitle>
-              <Skeleton className="h-6 w-48" />
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="py-4">
             <div className="space-y-4">
-              <div className="space-y-2">
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-              </div>
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
             </div>
           </CardContent>
         </Card>
       ) : importedExpenses.length === 0 ? (
         <Card>
-          <CardContent className="py-4">
+          <CardContent className="py-8">
             <p className="text-center text-muted-foreground">
               No imported transactions yet. Click "Import Transactions" to get started.
             </p>
@@ -52,22 +42,25 @@ const ImportHistory: React.FC = () => {
             <CardTitle>Imported Transactions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div className="space-y-4">
               {importedExpenses.map((expense) => (
                 <div 
                   key={expense.id}
-                  className="flex justify-between items-center border-b pb-2 last:border-b-0"
+                  className="flex justify-between items-start p-4 rounded-lg bg-secondary/10"
                 >
-                  <div>
-                    <p className="font-medium">{expense.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(expense.date).toLocaleDateString()} · {expense.category}
-                    </p>
-                    {expense.notes && (
-                      <p className="text-xs text-muted-foreground">{expense.notes}</p>
-                    )}
+                  <div className="space-y-2">
+                    <div>
+                      <p className="font-medium">{expense.description || expense.title}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(expense.date).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <Badge>{expense.category}</Badge>
+                      <Badge variant="outline">{expense.source}</Badge>
+                    </div>
                   </div>
-                  <p className="font-semibold text-expense">${expense.amount.toFixed(2)}</p>
+                  <p className="font-semibold">${expense.amount.toFixed(2)}</p>
                 </div>
               ))}
             </div>

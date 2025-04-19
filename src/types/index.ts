@@ -1,4 +1,3 @@
-
 export interface Expense {
   id: string;
   title: string;
@@ -8,6 +7,7 @@ export interface Expense {
   notes?: string;
   description?: string;
   source?: string;
+  isRecurring?: boolean;
 }
 
 export type ExpenseCategory = 
@@ -57,4 +57,12 @@ export interface Challenge {
   goal: number;
   current: number;
   participants: string[];
+}
+
+export interface Service {
+  id: string;
+  name: string;
+  cost: number;
+  renewalDate: string;
+  userId: string;
 }
