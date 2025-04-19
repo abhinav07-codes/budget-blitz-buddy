@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -22,20 +23,27 @@ const Login = () => {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     await signIn(email, password);
+    if (!error) {
+      toast.success("Signed in successfully!");
+      navigate('/');
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     await signUp(email, password);
+    if (!error) {
+      toast.success("Account created successfully! You can now sign in.");
+    }
   };
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Finance Tracker</CardTitle>
+    <div className="flex min-h-screen items-center justify-center px-4 bg-gradient-to-b from-background to-muted/20">
+      <Card className="w-full max-w-md shadow-lg">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-2xl font-bold">Budget Blitz</CardTitle>
           <CardDescription>
-            Manage your expenses and track your financial goals
+            Sign in to manage your finances and track your expenses
           </CardDescription>
         </CardHeader>
         
@@ -67,7 +75,9 @@ const Login = () => {
                   />
                 </div>
                 {error && (
-                  <div className="text-sm text-destructive">{error}</div>
+                  <div className="text-sm text-destructive bg-destructive/10 p-2 rounded-md">
+                    {error}
+                  </div>
                 )}
               </CardContent>
               
@@ -107,10 +117,14 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minLength={6}
                   />
+                  <p className="text-xs text-muted-foreground">Password must be at least 6 characters</p>
                 </div>
                 {error && (
-                  <div className="text-sm text-destructive">{error}</div>
+                  <div className="text-sm text-destructive bg-destructive/10 p-2 rounded-md">
+                    {error}
+                  </div>
                 )}
               </CardContent>
               
@@ -123,9 +137,9 @@ const Login = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing up...
+                      Creating account...
                     </>
-                  ) : 'Sign Up'}
+                  ) : 'Create Account'}
                 </Button>
               </CardFooter>
             </form>

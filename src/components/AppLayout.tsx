@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Link, useLocation, Outlet } from 'react-router-dom';
+import { UserMenu } from '@/components/UserMenu';
 import { 
   LayoutDashboard, 
   PieChart, 
@@ -69,8 +70,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
 
   const renderSidebarContent = () => (
     <div className="flex flex-col h-full">
-      <div className="px-4 py-6">
+      <div className="px-4 py-6 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Budget Blitz</h1>
+        {!isMobile && <UserMenu />}
       </div>
       
       <div className="flex-1 px-2 py-2 space-y-1">
@@ -95,10 +97,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
           {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           <span>{darkMode ? "Light Mode" : "Dark Mode"}</span>
         </Button>
-        <Button variant="ghost" className="w-full justify-start gap-2 text-destructive hover:text-destructive">
-          <LogOut className="h-5 w-5" />
-          <span>Log Out</span>
-        </Button>
       </div>
     </div>
   );
@@ -106,16 +104,21 @@ const AppLayout: React.FC<AppLayoutProps> = ({ darkMode, toggleDarkMode }) => {
   return (
     <div className="flex h-full">
       {isMobile ? (
-        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-64 p-0">
-            {renderSidebarContent()}
-          </SheetContent>
-        </Sheet>
+        <>
+          <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="fixed top-4 left-4 z-50">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0">
+              {renderSidebarContent()}
+            </SheetContent>
+          </Sheet>
+          <div className="fixed top-4 right-4 z-50">
+            <UserMenu />
+          </div>
+        </>
       ) : (
         <div className="w-64 h-full border-r bg-card">
           {renderSidebarContent()}
