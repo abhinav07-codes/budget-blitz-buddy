@@ -6,6 +6,8 @@ export interface Expense {
   category: ExpenseCategory;
   date: string; // ISO date string format
   notes?: string;
+  description?: string;
+  source?: string;
 }
 
 export type ExpenseCategory = 
